@@ -12,6 +12,17 @@ namespace WebApplication4.Models
         
     }
 
+    public class GetTask
+    {
+
+        public string title { get; set; }
+        public string note { get; set; }
+        public string duedate { get; set; }
+
+    }
+
+
+
     public class MyTaskInsert
     {
         public string title { get; set; }

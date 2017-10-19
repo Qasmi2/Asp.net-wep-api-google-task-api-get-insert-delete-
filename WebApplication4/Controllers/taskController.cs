@@ -25,7 +25,7 @@ namespace WebApplication4.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("api/TaskListall/Tasks")]
+        [Route("api/task/TaskListall")]
         public List<MyTask> GetTask()
         {
             List<MyTask> myList = new List<MyTask>();
@@ -56,7 +56,7 @@ namespace WebApplication4.Controllers
         // insert task into default tasklist 
         // function 
         [HttpPost]
-        [Route("api/defaultTasklist/insertTask")]
+        [Route("api/task/defaultTasklist/insertTask")]
 
         public string taskInsert()
         {
@@ -73,17 +73,17 @@ namespace WebApplication4.Controllers
         // Clear All the task into Default Task list 
 
         [HttpDelete]
-        [Route("api/clearallTasks")]
+        [Route("api/task/clearallTasks")]
         public string clearTask()
         {
             var response = auth.service.Tasklists.Get("@default");
             if (response.Tasklist == "@default")
-            {
+            {    // condition that all the the task are completed or selected for clear 
                 var result = response.Execute();
                 var responses = auth.service.Tasks.Clear(result.Id);
                 var resultes = responses.Execute();
                
-                return "Successful Clear all the tasks of the default Tasklsit";
+                return "Successful Clear all the completed tasks of the default Tasklsit";
             }
            else
             {
@@ -91,9 +91,39 @@ namespace WebApplication4.Controllers
             }
         }
 
-
+        //delete the Specific task
+        [HttpDelete]
+        [Route("api/task/DeletedTask")]
+        public string deleteTask(string taskid)
+        { // condition that deleted task is selected or not 
+            var response = auth.service.Tasks.Delete("@default",taskid);
+            var result = response.Execute();
+            return "successful deleted selected task ";
+        }
 
     
+
+        //get specifically selected task
+        [HttpGet]
+        [Route("api/task/showtask")]
+        public List<GetTask> GetTask(string taskid)
+        {
+            List<GetTask> mytask = new List<GetTask>();
+            var response = auth.service.Tasks.Get("@default",taskid);
+            var result = response.Execute();
+            GetTask a = new GetTask();
+           
+            a.title = result.Title;
+            a.note = result.Notes;
+
+            mytask.Add(a);
+
+            return mytask;
+
+        }
+
+
+
 
     }
 }
